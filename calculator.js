@@ -6,103 +6,71 @@ document.addEventListener('DOMContentLoaded', function() {
   const equalsButton = document.getElementById('equals');
   const clearButton = document.getElementById('clear');
 
-  let currentValue = '';
-  let previousValue = '';
-  let selectedOperator = null;
+  let currentValue = '0'; // Stores the current value displayed on the calculator
+  let operator = ''; // Stores the selected operator
+  let previousValue = ''; // Stores the previous value entered before selecting an operator
 
+  // Update the display value
   function updateDisplay() {
     displayValueElement.textContent = currentValue;
-  }
-
-  function clear() {
-    currentValue = '';
-    previousValue = '';
-    selectedOperator = null;
-    updateDisplay();
-  }
-
-  function appendNumber(number) {
-    if (number === '.' && currentValue.includes('.')) {
-      return; // Prevent adding multiple decimal points
-    }
-
-    currentValue += number;
-    updateDisplay();
-  }
-
-  function selectOperator(operator) {
-    if (currentValue === '') {
-      return; // Prevent selecting operator without a number
-    }
-
-    if (previousValue !== '') {
-      calculateResult();
-    }
-
-    selectedOperator = operator;
-    previousValue = currentValue;
-    currentValue = '';
-    updateDisplay();
-  }
-
-  function calculateResult() {
-    let result = 0;
-    const num1 = parseFloat(previousValue);
-    const num2 = parseFloat(currentValue);
-
-    if (isNaN(num1) || isNaN(num2)) {
-      return; // Prevent calculation if values are not valid numbers
-    }
-
-    switch (selectedOperator) {
-      case '+':
-        result = num1 + num2;
-        break;
-      case '-':
-        result = num1 - num2;
-        break;
-      case 'x':
-        result = num1 * num2;
-        break;
-      case '/':
-        result = num1 / num2;
-        break;
-      default:
-        return; // Prevent calculation if operator is not valid
-    }
-
-    currentValue = result.toString();
-    selectedOperator = null;
-    previousValue = '';
-    updateDisplay();
   }
 
   // Add event listeners to number buttons
   for (let i = 0; i < numberButtons.length; i++) {
     numberButtons[i].addEventListener('click', function() {
       const number = numberButtons[i].textContent;
-      appendNumber(number);
+      if (currentValue === '0') {
+        currentValue = number;
+      } else {
+        currentValue += number;
+      }
+      updateDisplay();
     });
   }
 
   // Add event listeners to operator buttons
   for (let i = 0; i < operatorButtons.length; i++) {
     operatorButtons[i].addEventListener('click', function() {
-      const operator = operatorButtons[i].textContent;
-      selectOperator(operator);
+      operator = operatorButtons[i].textContent;
+      previousValue = currentValue;
+      currentValue = '0';
+      updateDisplay();
     });
   }
 
   // Add event listener to the equals button
   equalsButton.addEventListener('click', function() {
-    calculateResult();
+    const result = calculateResult(parseFloat(previousValue), operator, parseFloat(currentValue));
+    currentValue = result.toString();
+    operator = '';
+    previousValue = '';
+    updateDisplay();
   });
 
   // Add event listener to the clear button
   clearButton.addEventListener('click', function() {
-    clear();
+    currentValue = '0';
+    operator = '';
+    previousValue = '';
+    updateDisplay();
   });
-});
+
+  // Perform calculation based on operator and operands
+  function calculateResult(num1, operator, num2) {
+    switch (operator) {
+      case '+':
+        return num1 + num2;
+      case '-':
+        return num1 - num2;
+      case 'x':
+        return num1 * num2;
+      case '/':
+        return num1 / num2;
+      default:
+        return 0;
+    }
+  }
+
   // Initialize the display
   updateDisplay();
 });
