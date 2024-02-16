@@ -1,81 +1,105 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const display = document.getElementById('displayValue');
+  // Variables for calculator functionality
+  let displayValue = '0'; // Current value displayed on the calculator
+  let firstOperand = null; // First operand for calculations
+  let operator = null; // Operator for calculations
+  let awaitingNextOperand = false; // Flag to check if next operand is awaited
 
-    const numberKeys = document.querySelectorAll('.number');
-  
-    const operatorKeys = document.querySelectorAll('.operator');
-  
-    const decimalKey = document.getElementById('decimal');
-  
-    const equalsKey = document.getElementById('equals');
-  
-    const clearKey = document.getElementById('clear');
-  
-    let currentNumber = '';
-  
-    let previousOperator = '';
-  
-    function updateDisplay(value) {
-      display.textContent = value;
+  // Display value on the calculator
+  const display = document.getElementById('displayValue');
+  display.textContent = displayValue;
+
+  // Function to update the display
+  function updateDisplay() {
+    display.textContent = displayValue;
+  }
+
+  // Function to handle number button clicks
+  function inputDigit(digit) {
+    if (awaitingNextOperand) {
+      displayValue = digit;
+      awaitingNextOperand = false;
+    } else {
+      displayValue = displayValue === '0' ? digit : displayValue + digit;
     }
-  
-    numberKeys.forEach(function(numberKey) {
-      numberKey.addEventListener('click', function() {
-        const number = this.textContent;
-        currentNumber += number;
-        updateDisplay(currentNumber);
-      });
-    });
-  
-    decimalKey.addEventListener('click', function() {
-      if (!currentNumber.includes('.')) {
-        currentNumber += '.';
-        updateDisplay(currentNumber);
-      }
-    });
-  
-    operatorKeys.forEach(function(operatorKey) {
-      operatorKey.addEventListener('click', function() {
-        const operator = this.textContent;
-  
-        if (previousOperator !== '') {
-          const result = calculate(previousOperator, parseFloat(currentNumber));
-          currentNumber = result.toString();
-          updateDisplay(currentNumber);
-        }
-  
-        previousOperator = operator;
-        currentNumber = '';
-      });
-    });
-  
-    equalsKey.addEventListener('click', function() {
-      if (previousOperator !== '') {
-        const result = calculate(previousOperator, parseFloat(currentNumber));
-        currentNumber = result.toString();
-        updateDisplay(currentNumber);
-        previousOperator = '';
-      }
-    });
-  
-    clearKey.addEventListener('click', function() {
-      currentNumber = '';
-      previousOperator = '';
-      updateDisplay('0');
-    });
-  
-    function calculate(operator, operand) {
-      const currentValue = parseFloat(display.textContent);
-  
-      switch (operator) {
-        case '+':
-          return currentValue + operand;
-        case '-':
-          return currentValue - operand;
-        case 'x':
-          return currentValue * operand;
-        case '/':
-          return currentValue / operand;
-      }
+  }
+
+  // Function to handle decimal point button click
+  function inputDecimal() {
+    if (!displayValue.includes('.')) {
+      displayValue += '.';
     }
+  }
+
+  // Function to handle operator button clicks
+  function handleOperator(nextOperator) {
+    const inputValue = parseFloat(displayValue);
+
+    if (firstOperand === null) {
+      firstOperand = inputValue;
+    } else if (operator) {
+      const result = performCalculation[operator](firstOperand, inputValue);
+      displayValue = String(result);
+      firstOperand = result;
+    }
+
+    awaitingNextOperand = true;
+    operator = nextOperator;
+  }
+
+  // Object to perform calculations based on the operator
+  const performCalculation = {
+    '+': (firstOperand, secondOperand) => firstOperand + secondOperand,
+    '-': (firstOperand, secondOperand) => firstOperand - secondOperand,
+    'x': (firstOperand, secondOperand) => firstOperand * secondOperand,
+    '/': (firstOperand, secondOperand) => firstOperand / secondOperand,
+    '=': (firstOperand, secondOperand) => secondOperand,
+  };
+
+  // Function to reset the calculator
+  function resetCalculator() {
+    displayValue = '0';
+    firstOperand = null;
+    operator = null;
+    awaitingNextOperand = false;
+  }
+
+  // Event listeners for number buttons
+  const numberButtons = document.querySelectorAll('.number');
+  numberButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      inputDigit(button.textContent);
+      updateDisplay();
+    });
   });
+
+  // Event listener for decimal point button
+  const decimalButton = document.getElementById('decimal');
+  decimalButton.addEventListener('click', () => {
+    inputDecimal();
+    updateDisplay();
+  });
+
+  // Event listeners for operator buttons
+  const operatorButtons = document.querySelectorAll('.operator');
+  operatorButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      handleOperator(button.textContent);
+      updateDisplay();
+    });
+  });
+
+  // Event listener for equals button
+  const equalsButton = document.getElementById('equals');
+  equalsButton.addEventListener('click', () => {
+    handleOperator('=');
+    updateDisplay();
+  });
+
+  // Event listener for clear button
+  const clearButton = document.getElementById('clear');
+  clearButton.addEventListener('click', () => {
+    resetCalculator();
+    updateDisplay();
+  });
+});
