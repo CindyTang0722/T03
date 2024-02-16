@@ -1,100 +1,107 @@
 document.addEventListener('DOMContentLoaded', function() {
-  // Get the display element
-  const display = document.getElementById('displayValue');
+  // Get references to the elements
+  const displayValueElement = document.getElementById('displayValue');
+  const numberButtons = document.getElementsByClassName('number');
+  const operatorButtons = document.getElementsByClassName('operator');
+  const equalsButton = document.getElementById('equals');
+  const clearButton = document.getElementById('clear');
 
-  // Get all number keys
-  const numberKeys = document.querySelectorAll('.number');
+  let currentValue = '';
+  let previousValue = '';
+  let selectedOperator = null;
 
-  // Get all operator keys
-  const operatorKeys = document.querySelectorAll('.operator');
-
-  // Get the decimal key
-  const decimalKey = document.getElementById('decimal');
-
-  // Get the equals key
-  const equalsKey = document.getElementById('equals');
-
-  // Get the clear key
-  const clearKey = document.getElementById('clear');
-
-  // Variable to store the current number
-  let currentNumber = '';
-
-  // Variable to store the previous operator
-  let previousOperator = '';
-
-  // Function to update the display
-  function updateDisplay(value) {
-    display.textContent = value;
+  function updateDisplay() {
+    displayValueElement.textContent = currentValue;
   }
 
-  // Event listener for number keys
-  numberKeys.forEach(function(numberKey) {
-    numberKey.addEventListener('click', function() {
-      const number = this.textContent;
-      currentNumber += number;
-      updateDisplay(currentNumber);
-    });
-  });
+  function clear() {
+    currentValue = '';
+    previousValue = '';
+    selectedOperator = null;
+    updateDisplay();
+  }
 
-  // Event listener for decimal key
-  decimalKey.addEventListener('click', function() {
-    if (!currentNumber.includes('.')) {
-      currentNumber += '.';
-      updateDisplay(currentNumber);
+  function appendNumber(number) {
+    if (number === '.' && currentValue.includes('.')) {
+      return; // Prevent adding multiple decimal points
     }
-  });
 
-  // Event listener for operator keys
-  operatorKeys.forEach(function(operatorKey) {
-    operatorKey.addEventListener('click', function() {
-      const operator = this.textContent;
+    currentValue += number;
+    updateDisplay();
+  }
 
-      if (previousOperator !== '') {
-        // Perform the calculation for the previous operator
-        const result = calculate(previousOperator, parseFloat(currentNumber));
-        currentNumber = result.toString();
-        updateDisplay(currentNumber);
-      }
-
-      previousOperator = operator;
-      currentNumber = '';
-    });
-  });
-
-  // Event listener for equals key
-  equalsKey.addEventListener('click', function() {
-    if (previousOperator !== '') {
-      // Perform the calculation for the previous operator
-      const result = calculate(previousOperator, parseFloat(currentNumber));
-      currentNumber = result.toString();
-      updateDisplay(currentNumber);
-      previousOperator = '';
+  function selectOperator(operator) {
+    if (currentValue === '') {
+      return; // Prevent selecting operator without a number
     }
-  });
 
-  // Event listener for clear key
-  clearKey.addEventListener('click', function() {
-    currentNumber = '';
-    previousOperator = '';
-    updateDisplay('0');
-  });
+    if (previousValue !== '') {
+      calculateResult();
+    }
 
-  // Function to perform the calculation
-  function calculate(operator, operand) {
-    const currentValue = parseFloat(display.textContent);
+    selectedOperator = operator;
+    previousValue = currentValue;
+    currentValue = '';
+    updateDisplay();
+  }
 
-    switch (operator) {
+  function calculateResult() {
+    let result = 0;
+    const num1 = parseFloat(previousValue);
+    const num2 = parseFloat(currentValue);
+
+    if (isNaN(num1) || isNaN(num2)) {
+      return; // Prevent calculation if values are not valid numbers
+    }
+
+    switch (selectedOperator) {
       case '+':
-        return currentValue + operand;
+        result = num1 + num2;
+        break;
       case '-':
-        return currentValue - operand;
+        result = num1 - num2;
+        break;
       case 'x':
-        return currentValue * operand;
+        result = num1 * num2;
+        break;
       case '/':
-        return currentValue / operand;
+        result = num1 / num2;
+        break;
+      default:
+        return; // Prevent calculation if operator is not valid
     }
+
+    currentValue = result.toString();
+    selectedOperator = null;
+    previousValue = '';
+    updateDisplay();
   }
+
+  // Add event listeners to number buttons
+  for (let i = 0; i < numberButtons.length; i++) {
+    numberButtons[i].addEventListener('click', function() {
+      const number = numberButtons[i].textContent;
+      appendNumber(number);
+    });
+  }
+
+  // Add event listeners to operator buttons
+  for (let i = 0; i < operatorButtons.length; i++) {
+    operatorButtons[i].addEventListener('click', function() {
+      const operator = operatorButtons[i].textContent;
+      selectOperator(operator);
+    });
+  }
+
+  // Add event listener to the equals button
+  equalsButton.addEventListener('click', function() {
+    calculateResult();
+  });
+
+  // Add event listener to the clear button
+  clearButton.addEventListener('click', function() {
+    clear();
+  });
 });
   // Initialize the display
   updateDisplay();
