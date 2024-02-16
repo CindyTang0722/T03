@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var numberButtons = document.getElementsByClassName('column');
   var operatorButtons = document.getElementsByClassName('operator');
   var equalsButton = document.getElementById('operator equal');
-  var clearButton = document.getElementById('clear');
+  var clearButton = document.getElementsByClassName('clear');
 
   let currentValue = '0'; // Stores the current value displayed on the calculator
   let operator = ''; // Stores the selected operator
