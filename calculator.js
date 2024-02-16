@@ -74,6 +74,3 @@ document.addEventListener('DOMContentLoaded', function() {
   // Initialize the display
   updateDisplay();
 });
-  // Initialize the display
-  updateDisplay();
-});
