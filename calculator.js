@@ -1,10 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
   // Get references to the elements
   var displayValueElement = document.getElementById('displayValue');
-  var numberButtons = document.getElementsByClassName('column');
-  var operatorButtons = document.getElementsByClassName('operator');
-  var equalsButton = document.getElementsByClassName('operator equal');
-  var clearButton = document.getElementsByClassName('clear');
+  var keys = document.getElementById('pad');
 
   let currentValue = '0'; // Stores the current value displayed on the calculator
   let operator = ''; // Stores the selected operator
