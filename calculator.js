@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateDisplayValue('0');
   }
   
+  // Event listener for number buttons
   numberButtons.forEach(button => {
     button.addEventListener('click', function() {
       const number = button.textContent;
@@ -76,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
   
+  // Event listener for operator buttons
   operatorButtons.forEach(button => {
     button.addEventListener('click', function() {
       const operator = button.textContent;
@@ -108,6 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
+// Event listener for the reset button
 const resetButton = document.getElementById('resetButton');
 resetButton.addEventListener('click', function() {
 resetCalculator();
