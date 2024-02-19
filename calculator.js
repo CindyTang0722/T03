@@ -1,4 +1,3 @@
-document.addEventListener('DOMContentLoaded', function() {
   let displayValue = document.getElementById('displayValue');
   let numberButtons = document.querySelectorAll('.number');
   let operatorButtons = document.querySelectorAll('.operator');
@@ -119,4 +118,32 @@ document.addEventListener('DOMContentLoaded', function() {
 const resetButton = document.getElementById('resetButton');
 resetButton.addEventListener('click', function() {
 resetCalculator();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  let num_btn = number;
+  let operation_btn = operations;
+  let equal_btn = equal;
+  let clear_btn = clear;
+  let dot_btn = dot;
+
+  for (let i = 0; i < clear_btn.length; i++) {
+    clear_btn[i].addEventListener('click', clearOnClick);
+  }
+
+  for (let i = 0; i < num_btn.length; i++) {
+    num_btn[i].addEventListener('click', numberOnClick);
+  }
+
+  for (let i = 0; i < operation_btn.length; i++) {
+    operation_btn[i].addEventListener('click', operationOnClick);
+  }
+
+  for (let i = 0; i < equal_btn.length; i++) {
+    equal_btn[i].addEventListener('click', equalOnClick);
+  }
+
+  for (let i = 0; i < dot_btn.length; i++) {
+    dot_btn[i].addEventListener('click', dotOnClick);
+  }
 });
