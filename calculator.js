@@ -1,4 +1,4 @@
-  document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
   let displayValue = document.getElementById('displayValue');
   let numberButtons = document.querySelectorAll('.number');
   let operatorButtons = document.querySelectorAll('.operator');
