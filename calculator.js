@@ -1,11 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
-  const displayValue = document.getElementById('displayValue');
-  const numberButtons = document.querySelectorAll('.number');
-  const operatorButtons = document.querySelectorAll('.operator');
-  const equalsButton = document.getElementById('equalsButton');
+  let displayValue = document.getElementById('displayValue');
+  let numberButtons = document.querySelectorAll('.number');
+  let operatorButtons = document.querySelectorAll('.operator');
+  let equalsButton = document.getElementById('equalsButton');
   let previousOperator = null;
   let firstNumber = null;
   let secondNumber = null;
+  
   function highlightOperatorButton(operator) {
     operatorButtons.forEach(button => {
       if (button.textContent === operator) {
