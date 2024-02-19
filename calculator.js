@@ -3,9 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
   let numberButtons = document.querySelectorAll('.number');
   let operatorButtons = document.querySelectorAll('.operator');
   let equalsButton = document.getElementById('equalsButton');
+  
   let previousOperator = null;
   let firstNumber = null;
   let secondNumber = null;
+  let result = 0;
   
   function highlightOperatorButton(operator) {
     operatorButtons.forEach(button => {
@@ -30,18 +32,20 @@ document.addEventListener('DOMContentLoaded', function() {
     switch (previousOperator) {
       case '+':
         result = firstNumber + secondNumber;
+        displayValue.innerHTML = result;
         break;
       case '-':
         result = firstNumber - secondNumber;
+        displayValue.innerHTML = result;
         break;
       case 'x':
         result = firstNumber * secondNumber;
+        displayValue.innerHTML = result;
         break;
       case '/':
         result = firstNumber / secondNumber;
+        displayValue.innerHTML = result;
         break;
-      default:
-        result = null;
     }
     return result;
   }
